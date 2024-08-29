@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ExerciseLooper</title>
-    </head>
-    <body>
-        <h1>Exercise Looper</h1>
-    </body>
-</html>
+<?php
+
+//initialize page variables
+$title = "ExerciseLooper";
+
+ob_start();
+?>
+    <h1>Exercise Looper</h1>
+<?php
+
+$content = ob_get_clean();
+
+require SOURCE_DIR."/layout.php";
