@@ -4,7 +4,13 @@ session_start();
 
 define('BASE_DIR', dirname( __FILE__ ).'/..');
 define('SOURCE_DIR', BASE_DIR.'/src');
+define('MODEL_DIR', SOURCE_DIR.'/models');
 define('VIEW_DIR', SOURCE_DIR.'/views');
+
+require_once BASE_DIR.'/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(BASE_DIR);
+$dotenv->load();
 
 $request = $_SERVER['REQUEST_URI'];
 
