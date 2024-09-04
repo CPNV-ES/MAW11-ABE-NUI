@@ -10,4 +10,4 @@ ob_start();
 
 $content = ob_get_clean();
 
-require SOURCE_DIR."/layout.php";
+require SOURCE_DIR . "/layout.php";
