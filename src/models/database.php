@@ -45,4 +45,24 @@ class DBConnection
     {
         return $this->pdo;
     }
+        
+    /**
+     * Prepares and executes sql queries
+     *
+     * @param  string $sql The SQL query to execute
+     * @param  array $params The parameters of the SQL query
+     * @return array The results of the query
+     * @throws Exception If the query fails.
+     */
+    public function query($sql, $params = [])
+    {
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($params);
+            
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Query failed: " . $e->getMessage(), 500);
+        }
+    }
 }
