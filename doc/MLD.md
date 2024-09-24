@@ -10,8 +10,8 @@ classDiagram
     class exercises{
         pk(id)
         id Int
-        Status Text
-        Title Text
+        title Text
+        exercise_status Enum["building", "answering", "closed"]
     }
     class fields {
         pk(id)
