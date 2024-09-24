@@ -8,6 +8,7 @@ use PDO;
 
 class DatabaseConnection
 {
+    private static $instance = null;
     private $hostname;
     private $database;
     private $username;
@@ -15,7 +16,7 @@ class DatabaseConnection
     private $pdo;
 
 
-    public function __construct($hostname, $database, $username, $password)
+    private function __construct($hostname, $database, $username, $password)
     {
         $this->hostname = $hostname;
         $this->database = $database;
@@ -32,6 +33,14 @@ class DatabaseConnection
             throw new Exception("Could not connect to the database: " . $e->getMessage(), 500);
         }
     }
+    
+    public static function getInstance($hostname, $database, $username, $password)
+    {
+        if (self::$instance === null) {
+            self::$instance = new self($hostname, $database, $username, $password);
+        }
+        return self::$instance;
+    }
 
     public function closeConnection()
     {
@@ -46,8 +55,8 @@ class DatabaseConnection
     /**
      * Prepares and executes sql queries
      *
-     * @param  string $sql The SQL query to execute
-     * @param  array $params The parameters of the SQL query
+     * @param  string $sql    The SQL query to execute
+     * @param  array  $params The parameters of the SQL query
      * @return array The results of the query
      * @throws Exception If the query fails.
      */
@@ -61,5 +70,15 @@ class DatabaseConnection
         } catch (PDOException $e) {
             throw new Exception("Query failed: " . $e->getMessage(), 500);
         }
+    }
+
+    // Prevent cloning the instance
+    private function __clone()
+    {
+    }
+
+    // Prevent unserializing the instance
+    private function __wakeup()
+    {
     }
 }
