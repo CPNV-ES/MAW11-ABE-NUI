@@ -4,7 +4,7 @@ session_start();
 
 define('BASE_DIR', dirname(__FILE__) . '/..');
 define('SOURCE_DIR', BASE_DIR . '/src');
-define('MODEL_DIR', SOURCE_DIR . '/models');
+define('MODEL_DIR', SOURCE_DIR . '/Models');
 define('VIEW_DIR', SOURCE_DIR . '/views');
 
 require_once BASE_DIR . '/vendor/autoload.php';

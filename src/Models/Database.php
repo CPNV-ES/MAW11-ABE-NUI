@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use PDOException;
 use Exception;
 use PDO;
 
-class DatabaseConnection
+class Database
 {
     private static $instance = null;
     private $hostname;
@@ -70,15 +70,5 @@ class DatabaseConnection
         } catch (PDOException $e) {
             throw new Exception("Query failed: " . $e->getMessage(), 500);
         }
-    }
-
-    // Prevent cloning the instance
-    private function __clone()
-    {
-    }
-
-    // Prevent unserializing the instance
-    private function __wakeup()
-    {
     }
 }
