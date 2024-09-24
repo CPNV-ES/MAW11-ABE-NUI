@@ -12,4 +12,11 @@ class Exercise
         
         $db->query("INSERT INTO exercises (title, exercise_status) VALUES (:title, :exercise_status)", ["title" => $title, "exercise_status" => $exercise_status]);
     }
+
+    public static function fetchAll()
+    {
+        $db = Database::getInstance($_ENV["DATABASE_HOST"], $_ENV["DATABASE_NAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
+        
+        return $db->query("SELECT * FROM exercises");
+    }
 }
