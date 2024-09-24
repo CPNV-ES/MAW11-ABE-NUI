@@ -15,7 +15,7 @@ final class DatabaseTest extends TestCase
 {
     public function testDatabaseNotNull(): void
     {
-        $database = Database::getInstance('localhost', 'mydb', 'user', 'password');
+        $database = Database::getInstance($_ENV["DATABASE_HOST"], $_ENV["DATABASE_NAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
 
         $this->assertNotNull($database);
     }
