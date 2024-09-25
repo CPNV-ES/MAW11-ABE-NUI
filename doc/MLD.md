@@ -28,10 +28,15 @@ classDiagram
     }
     class answers {
         pk(id)
-        fk(field_id)
+        fk(field_id, fulfillment_id)
         id Int
-        answer_date Date
         contents Text
         field_id Int
+        fulfillment_id Int
+    }
+    class fulfillments {
+        pk(id)
+        id Int
+        fulfillment Date
     }
 ```
