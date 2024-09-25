@@ -12,6 +12,6 @@ class ExercisesController
 
         Exercise::addExercise($name);
 
-        require_once(VIEW_DIR . '/home.php');
+        include_once VIEW_DIR . '/home.php';
     }
 }
