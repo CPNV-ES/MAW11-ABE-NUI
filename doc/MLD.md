@@ -3,7 +3,7 @@
 title: MAW11-ABE-NUI
 ---
 classDiagram
-    note "Project: MAW11-ABE-NUI\nTitle: Full MLD\nAuthor: Arthur Bottemanne\nVersion: 1.0v 09/24/2024"
+    note "Project: MAW11-ABE-NUI\nTitle: Full MLD\nAuthor: Arthur Bottemanne\nVersion: 1.1v 09/25/2024"
     exercises <|-- fields
     field_types <|-- fields
     fields <|-- answers
