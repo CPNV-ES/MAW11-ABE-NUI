@@ -21,7 +21,15 @@ switch ($request) {
     case '/':
         include VIEW_DIR . '/home.php';
         break;
-
+    case '/exercises/new':
+        include VIEW_DIR . '/NewExercise.php';
+        break;
+    case '/exercises/answering':
+        include VIEW_DIR . '/AnsweringExercises.php';
+        break;
+    case '/exercises':
+        include VIEW_DIR . '/Exercises.php';
+        break;
     default:
         http_response_code(404);
         include VIEW_DIR . '/404.php';
