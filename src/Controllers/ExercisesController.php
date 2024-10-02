@@ -8,7 +8,7 @@ class ExercisesController
 {
     public static function create()
     {
-        $name = $_POST["exercise_name"];
+        $name = $_POST["title"];
 
         Exercise::addExercise($name);
 
