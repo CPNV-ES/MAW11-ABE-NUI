@@ -29,4 +29,4 @@ ob_start();
 
 $content = ob_get_clean();
 
-require SOURCE_DIR . "/layout.php";
+require VIEW_DIR . "/layout.php";
