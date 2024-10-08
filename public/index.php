@@ -33,7 +33,7 @@ $router = new Router([$route, $method]);
 
 $router->addRoute(new Route('GET', '/', [Controller::class, '/Home.php']));
 $router->addRoute(new Route('GET', '/exercises/new', [Controller::class, '/Create.php']));
-$router->addRoute(new Route('GET', '/exercises/answering', [Controller::class, '/TakeExercise.php']));
+$router->addRoute(new Route('GET', '/exercises/answering', [ExercisesController::class, 'showAnswering']));
 $router->addRoute(new Route('POST', '/exercises/new', [ExercisesController::class, 'create']));
 
 $router->matchRoute();
