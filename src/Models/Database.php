@@ -6,6 +6,8 @@ use PDOException;
 use Exception;
 use PDO;
 
+use App\Models\Model;
+
 class Database
 {
     private static $instance = null;
@@ -33,7 +35,7 @@ class Database
             throw new Exception("Could not connect to the database: " . $e->getMessage(), 500);
         }
     }
-    
+
     public static function getInstance($hostname, $database, $username, $password)
     {
         if (self::$instance === null) {

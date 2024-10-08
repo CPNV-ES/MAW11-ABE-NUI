@@ -18,7 +18,7 @@ ob_start();
     <h1>New Exercise</h1>
 </header>
 <main>
-    <form action="/exercises" method="POST" class="exercise-form">
+    <form action="/exercises/new" method="POST" class="exercise-form">
         <label for="title">Title</label>
         <input type="text" id="title" name="title" required>
 

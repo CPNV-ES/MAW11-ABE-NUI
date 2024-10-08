@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\Exercise;
+use App\Models\Exercises;
 
 class ExercisesController extends Controller
 {
@@ -10,7 +10,7 @@ class ExercisesController extends Controller
     {
         $name = $_POST["title"];
 
-        Exercise::addExercise($name);
+        Exercises::addExercise($name);
 
         include_once VIEW_DIR . '/home.php';
     }
