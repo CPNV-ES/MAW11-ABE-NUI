@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Exercise;
 
-class ExercisesController
+class ExercisesController extends Controller
 {
     public static function create()
     {
