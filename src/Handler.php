@@ -23,7 +23,7 @@ class Handler
 
             if ($this->controller == Controller::class) {
                 if (file_exists(VIEW_DIR . $this->function)) {
-                    call_user_func([$this->controller, "view"], $this->function);
+                    call_user_func([$this->controller, "view"], [$this->function, $args]);
                     return;
                 }
             }
