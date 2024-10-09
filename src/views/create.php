@@ -2,7 +2,7 @@
 
 //initialize page variables
 $title = "ExerciseLooper";
-$style =  '<link rel="stylesheet" href="/css/create_style.css">';
+$style = '<link rel="stylesheet" href="/css/create_style.css">';
 ob_start();
 
 ?>
@@ -31,4 +31,4 @@ ob_start();
 
 $content = ob_get_clean();
 
-require VIEW_DIR . "/layout.php";
+require VIEW_DIR . "/Layout.php";

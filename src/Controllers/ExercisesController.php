@@ -14,4 +14,11 @@ class ExercisesController extends Controller
 
         include_once VIEW_DIR . '/home.php';
     }
+
+    public static function showAnswering()
+    {
+        $exercises = Exercises::findAllByStatus("answering");
+
+        include_once VIEW_DIR . "/TakeExercise.php";
+    }
 }
