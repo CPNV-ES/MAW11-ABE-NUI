@@ -14,4 +14,9 @@ class ExercisesController extends Controller
 
         include_once VIEW_DIR . '/home.php';
     }
+
+    public static function updateStatus($parameters)
+    {
+        error_log(print_r($parameters, true));
+    }
 }

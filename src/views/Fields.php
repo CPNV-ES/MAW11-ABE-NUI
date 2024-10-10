@@ -4,6 +4,8 @@
 $title = "ExerciseLooper";
 $style = '<link rel="stylesheet" href="/css/Fields.css">';
 
+$exerciseData = $data["exercise"];
+
 ob_start();
 ?>
 
@@ -11,7 +13,7 @@ ob_start();
 <header class="heading managing">
     <section class="container">
         <a href="/"><img src="/img/logo.png" /></a>
-        <span class="exercise-label">Exercise: <a href="/exercises/141/fields">teetatea</a></span>
+        <span class="exercise-label">Exercise: <a href="/exercises/<?= $exerciseData["id"]; ?>/fields"><?= $exerciseData["title"] ?></a></span>
     </section>
 </header>
 
@@ -32,13 +34,12 @@ ob_start();
                 </tbody>
             </table>
 
-            <a data-confirm="Are you sure? You won&#39;t be able to further edit this exercise" class="button" rel="nofollow" data-method="put" href="/exercises/141?exercise%5Bstatus%5D=answering"><i class="fa fa-comment"></i> Complete and be ready for answers</a>
+            <a data-confirm="Are you sure? You won't be able to further edit this exercise" class="button" rel="nofollow" data-method="put" href="/exercises/<?= $exerciseData["id"]; ?>/status=answering"><i class="fa fa-comment"></i> Complete and be ready for answers</a>
 
         </section>
         <section class="column">
             <h1>New Field</h1>
-            <form action="/exercises/141/fields" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="1TIOsTub8Dmv8NPGhgCklwuZcN9SUadvrbBzqmQDPuSu0xZMrh0/uP616LsMpQiva7F3wc6BPHFjtKIQqD2G2g==" />
-
+            <form action="/exercises/<?= $exerciseData["id"]; ?>/fields" accept-charset="UTF-8" method="post">
                 <div class="field">
                     <label for="field_label">Label</label>
                     <input type="text" name="field[label]" id="field_label" />
