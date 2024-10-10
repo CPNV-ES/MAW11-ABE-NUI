@@ -37,7 +37,13 @@ class Model
             return ':' . $item;
         }, $columnNames)) . ")";
 
-        return static::getDatabaseInstance()->query($sql, $SQLParameters);
+        static::getDatabaseInstance()->query($sql, $SQLParameters);
+
+        $results = static::getDatabaseInstance()->getLastInsertedRow($tableName);
+
+        error_log(print_r($results, true));
+
+        return $results;
     }
 
     protected static function tableName()

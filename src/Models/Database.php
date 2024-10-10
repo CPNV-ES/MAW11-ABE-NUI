@@ -73,4 +73,12 @@ class Database
             throw new Exception("Query failed: " . $e->getMessage(), 500);
         }
     }
+
+    public function getLastInsertedRow($tableName)
+    {
+        $sql = "SELECT * FROM $tableName WHERE id = :id";
+        $lastInsertedId = $this->pdo->lastInsertId();
+
+        return $this->query($sql, ["id" => $lastInsertedId]);
+    }
 }
