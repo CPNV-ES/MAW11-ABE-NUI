@@ -2,6 +2,7 @@
 
 //initialize page variables
 $title = "ExerciseLooper";
+$style = '<link rel="stylesheet" href="/css/Home.css">';
 
 ob_start();
 ?>
