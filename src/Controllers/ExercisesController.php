@@ -10,9 +10,9 @@ class ExercisesController extends Controller
     {
         $name = $_POST["title"];
 
-        Exercises::addExercise($name);
+        $exerciseData = Exercises::addExercise($name)[0];
 
-        include_once VIEW_DIR . '/home.php';
+        header("Location: /exercises/" . $exerciseData['id'] . "/fields");
     }
 
     public static function showAnswering()

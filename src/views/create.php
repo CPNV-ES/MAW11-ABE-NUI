@@ -7,25 +7,23 @@ ob_start();
 
 ?>
 
-
 <header>
     <div class="logo-container">
-        <!-- Le logo qui renvoie à la page d'accueil -->
         <a href="home.php">
             <img src="/img/logo.png" alt="Logo" class="logo">
         </a>
     </div>
     <h1>New Exercise</h1>
 </header>
+
 <main>
-    <form action="/exercises/new" method="POST" class="exercise-form">
+    <form action="/exercises" method="POST" class="exercise-form">
         <label for="title">Title</label>
         <input type="text" id="title" name="title" required>
 
         <button type="submit" class="btn purple">Create Exercise</button>
     </form>
 </main>
-
 
 <?php
 
