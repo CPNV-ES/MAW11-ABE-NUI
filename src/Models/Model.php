@@ -40,6 +40,19 @@ class Model
         return static::getDatabaseInstance()->query($sql, $SQLParameters);
     }
 
+    protected static function update($columnNames, $columnCondition, $SQLParameters)
+    {
+        $tableName = static::tableName();
+
+        // $columnName = :$columnName,
+
+        $sql = "UPDATE $tableName SET " . join(',', array_map(function ($value) {
+            return $value . " = :" . $value;
+        }, $columnNames)) . " WHERE " . $columnCondition . " = :" . $columnCondition;
+
+        return static::getDatabaseInstance()->query($sql, $SQLParameters);
+    }
+
     protected static function tableName()
     {
         $class_name = strtolower(get_called_class());
