@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\Exercises;
+
 class Controller
 {
     protected array $variables;
@@ -16,8 +18,20 @@ class Controller
         return $this->variables;
     }
 
-    public static function view(string $path): void
+    public static function view($parameters)
     {
-        require_once VIEW_DIR . $path;
+        $idsArray = $parameters[1];
+
+        $data = [];
+
+        if ($idsArray != []) {
+            foreach ($idsArray as $key => $id) {
+                if (str_contains($key, "exercise")) {
+                    $data["exercise"] = Exercises::findBy("id", $id)[0];
+                }
+            }
+        }
+
+        require_once VIEW_DIR . $parameters[0];
     }
 }

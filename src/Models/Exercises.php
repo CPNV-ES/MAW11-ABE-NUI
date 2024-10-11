@@ -13,4 +13,9 @@ class Exercises extends Model
     {
         return parent::findBy("exercise_status", $status);
     }
+
+    public static function updateStatus($id, $exercise_status)
+    {
+        parent::update(["exercise_status"], "id", ["exercise_status" => $exercise_status, "id" => $id]);
+    }
 }
