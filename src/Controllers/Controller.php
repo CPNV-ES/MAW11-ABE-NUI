@@ -18,20 +18,25 @@ class Controller
         return $this->variables;
     }
 
-    public static function view($parameters)
+    // Fusion des deux méthodes view en une seule méthode polymorphe
+    public static function view($viewPath, $params = [])
     {
-        $idsArray = $parameters[1];
+        if (is_array($viewPath)) {
+            $idsArray = $viewPath[1];
+            $data = [];
 
-        $data = [];
-
-        if ($idsArray != []) {
-            foreach ($idsArray as $key => $id) {
-                if (str_contains($key, "exercise")) {
-                    $data["exercise"] = Exercises::findBy("id", $id)[0];
+            if ($idsArray != []) {
+                foreach ($idsArray as $key => $id) {
+                    if (str_contains($key, "exercise")) {
+                        $data["exercise"] = Exercises::findBy("id", $id)[0];
+                    }
                 }
             }
-        }
 
-        require_once VIEW_DIR . $parameters[0];
+            require_once VIEW_DIR . $viewPath[0];
+        } else {
+            extract($params);
+            include(VIEW_DIR . '/' . $viewPath . '.php');
+        }
     }
 }

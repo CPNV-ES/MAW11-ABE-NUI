@@ -3,8 +3,7 @@
 namespace App;
 
 use Exception;
-
-class Router
+ class Router
 {
     private $routes;
     private $routeRequest;
@@ -24,7 +23,13 @@ class Router
     {
         $routeRequest = $this->routeRequest;
 
+        // Debugging: Affiche la route demandée et la méthode
+        echo 'Requested route: ' . $routeRequest[0] . ' with method: ' . $routeRequest[1] . PHP_EOL;
+
         foreach ($this->routes as $route) {
+
+            // Debugging: Affiche chaque route vérifiée
+            echo 'Checking route: ' . $route->getPath() . PHP_EOL;
 
             if ($route->matchesMethod($routeRequest[1])) {
 

@@ -2,20 +2,99 @@
 
 namespace App\Models;
 
-class Exercises extends Model
+use App\Database\Query;
+use PDOException;
+
+class Exercise extends Model
 {
-    public static function addExercise($title, $exercise_status = "building")
+    protected int    $id;
+    protected string $title;
+    protected string $state = 'building';
+    protected Query  $query;
+
+    public function __construct(array $params = [])
     {
-        return parent::insert(["title", "exercise_status"], ["title" => $title, "exercise_status" => $exercise_status]);
+        $this->query = new Query();
+        if (array_key_exists('title', $params)) {
+            $this->title = $params['title'];
+        }
+        parent::__construct($params);  // Appel au constructeur parent après initialisation
     }
 
-    public static function findAllByStatus($status)
+    public function getId(): ?int
     {
-        return parent::findBy("exercise_status", $status);
+        return $this->id ?? null;
     }
 
-    public static function updateStatus($id, $exercise_status)
+    public function getTitle(): string
     {
-        parent::update(["exercise_status"], "id", ["exercise_status" => $exercise_status, "id" => $id]);
+        return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    public function getState(): string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): void
+    {
+        $this->state = $state;
+    }
+
+    public function getFields(int $fieldId = null): array|Field
+    {
+        if (is_null($fieldId)) {
+            return $this->query->select('fields', Field::class, 'exercises_id = :id', [':id' => $this->id]);
+        } else {
+            return $this->query->select(
+                'fields',
+                Field::class,
+                'id  = :field_id AND exercises_id = :exercises_id',
+                ['field_id' => $fieldId, 'exercises_id' => $this->id],
+                true
+            );
+        }
+    }
+
+    public function createField(Field $field): int
+    {
+        try {
+            return $this->query->insert('fields', Field::class, [
+                'label'        => $field->getLabel(),
+                'value_kind'   => $field->getValueKind(),
+                'exercises_id' => $this->id,
+            ]);
+        } catch (PDOException $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
+    public function deleteField(int $fieldId): void
+    {
+        foreach ($this->getFulfillments() as $fulfillment) {
+            $fulfillment->delete();
+        }
+        $this->query->delete('fields', Field::class, 'id = :id', ['id' => $fieldId]);
+    }
+
+    public function getFulfillments(int $fulfillment = null): array|Fulfillment
+    {
+        if (is_null($fulfillment)) {
+            return $this->query->select('fulfillments', Fulfillment::class, 'exercises_id = :id', [':id' => $this->id]);
+        } else {
+            return $this->query->select(
+                'fulfillments',
+                Fulfillment::class,
+                'id = :field_id AND exercises_id = :exercises_id',
+                ['field_id' => $fulfillment, 'exercises_id' => $this->id],
+                true
+            );
+        }
     }
 }
