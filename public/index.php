@@ -14,7 +14,7 @@ require_once '../vendor/autoload.php';
 define('TEMPLATES_DIR', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR);
 
 DBConnection::setUp(
-    'mysql:host=127.0.0.1;port=3308;dbname=looper;charset=utf8mb4',
+    'mysql:host=127.0.0.1;port=3306;dbname=looper;charset=utf8mb4',
     'root',
     'root_password'
 );
