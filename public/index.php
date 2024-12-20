@@ -1,46 +1,47 @@
 <?php
 
-session_start();
+use App\Controllers\ExerciseController;
+use App\Controllers\FieldsController;
+use App\Controllers\FulfillmentController;
+use App\Controllers\HomeController;
+use App\Database\DBConnection;
+use App\Router\Route;
+use App\Router\Router;
 
-define('BASE_DIR', dirname(__FILE__) . '/..');
-define('PUBLIC_DIR', dirname(__FILE__));
-define('IMG_DIR', PUBLIC_DIR . '/img');
-define('SOURCE_DIR', BASE_DIR . '/src');
-define('MODEL_DIR', SOURCE_DIR . '/Models');
-define('VIEW_DIR', SOURCE_DIR . '/Views');
-define('CONTROLLER_DIR', SOURCE_DIR . '/Controllers');
+require_once '../vendor/autoload.php';
+//require_once 'const.php';
 
-require_once BASE_DIR . '/vendor/autoload.php';
+define('TEMPLATES_DIR', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR);
 
-$dotenv = Dotenv\Dotenv::createImmutable(BASE_DIR);
-$dotenv->load();
+DBConnection::setUp(
+    'mysql:host=127.0.0.1;port=3308;dbname=looper;charset=utf8mb4',
+    'root',
+    'root_password'
+);
 
-use App\Route;
-use App\Router;
-use App\Controllers\Controller;
-use App\Controllers\ExercisesController;
+$router = Router::getInstance();
 
-$route = $_SERVER['REQUEST_URI'];
-$method = $_SERVER["REQUEST_METHOD"];
+$router->get('home_index', new Route('/', HomeController::class, 'index'));
 
-if (!empty($_SERVER["QUERY_STRING"])) {
-    $route = substr($route, 0, strlen($_SERVER["REQUEST_URI"]) - strlen($_SERVER["QUERY_STRING"]) - 1);
-}
+$router->get('exercises_index', new Route('/exercises', ExerciseController::class, 'index'));
+$router->get('exercises_new', new Route('/exercises/new', ExerciseController::class, 'new'));
+$router->get('exercises_answering', new Route('/exercises/answering', ExerciseController::class, 'answering'));
+$router->post('exercises_create', new Route('/exercises/new', ExerciseController::class, 'new'));
+$router->post('exercises_state', new Route('/exercises/:exercise/state', ExerciseController::class, 'state'));
+$router->post('exercises_delete', new Route('/exercises/:exercise', ExerciseController::class, 'delete'));
+$router->get('exercises_results', new Route('/exercises/:exercise/results', ExerciseController::class, 'results'));
 
-include_once SOURCE_DIR . '/Router.php';
-$router = new Router([$route, $method]);
+$router->get('fields_index', new Route('/exercises/:exercise/fields', FieldsController::class, 'index'));
+$router->post('fields_create', new Route('/exercises/:exercise/fields', FieldsController::class, 'index'));
+$router->get('fields_edit', new Route('/exercises/:exercise/fields/:field/edit', FieldsController::class, 'edit'));
+$router->post('fields_update', new Route('/exercises/:exercise/fields/:field/edit', FieldsController::class, 'edit'));
+$router->post('fields_delete', new Route('/exercises/:exercise/fields/:field', FieldsController::class, 'delete'));
+$router->get('fields_results', new Route('/exercises/:exercise/results/:field', FieldsController::class, 'results'));
 
-// Ajout des routes
-$router->addRoute(new Route('GET', '/', [Controller::class, '/home.php']));
-$router->addRoute(new Route('GET', '/exercises', [ExercisesController::class, 'index'])); // Ajout de cette ligne
-$router->addRoute(new Route('GET', '/exercises/new', [Controller::class, '/create.php']));
-$router->addRoute(new Route('GET', '/exercises/answering', [ExercisesController::class, 'showAnswering']));
-$router->addRoute(new Route('GET', '/exercises/{exerciseId}/fields', [Controller::class, '/fields.php']));
-$router->addRoute(new Route('POST', '/exercises', [ExercisesController::class, 'create']));
-$router->addRoute(new Route('POST', '/exercises/{exerciseId}/status', [ExercisesController::class, 'updateStatus']));
+$router->get('fulfillments_new', new Route('/exercises/:exercise/fulfillments/new', FulfillmentController::class, 'new'));
+$router->post('fulfillments_create', new Route('/exercises/:exercise/fulfillments/create', FulfillmentController::class, 'create'));
+$router->get('fulfillments_edit', new Route('/exercises/:exercise/fulfillments/:fulfillment/edit', FulfillmentController::class, 'edit'));
+$router->post('fulfillments_update', new Route('/exercises/:exercise/fulfillments/:fulfillment/update', FulfillmentController::class, 'update'));
+$router->get('fulfillments_results', new Route('/exercises/:exercise/fulfillments/:fulfillment', FulfillmentController::class, 'results'));
 
-$router->matchRoute();
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+$router->run();

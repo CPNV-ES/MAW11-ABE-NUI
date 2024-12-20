@@ -1,42 +1,78 @@
 <?php
 
-namespace App;
+namespace App\Router; // Defines the namespace for the router
 
 class Route
 {
-    private $method;
-    private $path;
-    private $handler;
+    protected string $path; // Protected property to store the route path
+    protected string $controller; // Protected property to store the controller name
+    protected string $method; // Protected property to store the method name
+    protected array  $matches; // Protected property to store the matches from the URL
 
-    public function __construct($method, $path, $handler)
+    /**
+     * Constructor to initialize the Route object
+     *
+     * @param string $path
+     * @param string $controller
+     * @param string $method
+     */
+    public function __construct(string $path, string $controller, string $method)
     {
-        $this->method = strtoupper($method);
-        $this->path = rtrim($path, '/');
-        $this->handler = $handler;
+        $this->path = trim($path, '/'); // Sets the path, trimming any leading/trailing slashes
+        $this->controller = $controller; // Sets the controller name
+        $this->method = $method; // Sets the method name
     }
 
-    public function getMethod()
+    /**
+     * Gets the path of the route
+     *
+     * @return string
+     */
+    public function getPath(): string
     {
-        return $this->method;
+        return $this->path; // Returns the path
     }
 
-    public function getPath()
+    /**
+     * Checks if the given URL matches the route
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public function matches(string $url): bool
     {
-        return $this->path;
+        $url_components = parse_url($url); // Parses the URL into components
+        $path = preg_replace('#:([\w]+)#', '([0-9]+)', $this->path); // Replaces placeholders in the path with regex to match numbers
+        $pathToMatch = '/^\/' . str_replace('/', '\/', $path) . '$/'; // Prepares the regex pattern to match the path
+
+        if (preg_match($pathToMatch, $url_components['path'], $matches)) { // Checks if the URL path matches the pattern
+            $this->matches = $matches; // Stores the matches
+            if (isset($url_components['query'])) {
+                $this->matches[] = $url_components['query']; // Adds the query component to matches if present
+            }
+            return true; // Returns true if matches
+        } else {
+            return false; // Returns false if no matches
+        }
     }
 
-    public function getHandler()
+    /**
+     * Executes the controller method based on the route
+     *
+     * @return void
+     */
+    public function execute(): void
     {
-        return $this->handler;
-    }
+        $controller = new $this->controller(); // Creates a new instance of the controller
+        $method = $this->method; // Sets the method to be called
 
-    public function matchesMethod($method)
-    {
-        return strtoupper($method) === $this->method;
-    }
-
-    public function matchesPath($path)
-    {
-        return rtrim($path, '/') === $this->path;
+        if (isset($this->matches[2])) {
+            $controller->$method($this->matches[1], $this->matches[2]); // Calls the method with two parameters if present
+        } elseif (isset($this->matches[1])) {
+            $controller->$method($this->matches[1]); // Calls the method with one parameter if present
+        } else {
+            $controller->$method(); // Calls the method with no parameters
+        }
     }
 }

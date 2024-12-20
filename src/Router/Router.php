@@ -1,87 +1,106 @@
 <?php
 
-namespace App;
+namespace App\Router; // Defines the namespace for the router
 
-use Exception;
- class Router
+use PharIo\Manifest\InvalidUrlException; // Imports the InvalidUrlException class
+
+class Router
 {
-    private $routes;
-    private $routeRequest;
+    private static ?Router $instance = null; // Private static property to hold the single instance of Router
 
-    public function __construct($request)
+    public array $routes; // Public property to store the routes
+
+    private function __construct() {} // Private constructor to prevent multiple instances
+
+    /**
+     * Gets the single instance of the Router class
+     *
+     * @return Router
+     */
+    public static function getInstance(): Router
     {
-        $this->routes = [];
-        $this->routeRequest = $request;
+        if (self::$instance == null) {
+            self::$instance = new Router(); // Creates a new instance if not already created
+        }
+        return self::$instance; // Returns the single instance
     }
 
-    public function addRoute($route)
+    /**
+     * Registers a GET route
+     *
+     * @param string $name
+     * @param Route  $route
+     *
+     * @return void
+     */
+    public function get(string $name, Route $route): void
     {
-        $this->routes[] = $route;
+        $this->routes['GET'][$name] = $route; // Adds the route to the GET routes array
     }
 
-    public function matchRoute()
+    /**
+     * Registers a POST route
+     *
+     * @param string $name
+     * @param Route  $route
+     *
+     * @return void
+     */
+    public function post(string $name, Route $route): void
     {
-        $routeRequest = $this->routeRequest;
+        $this->routes['POST'][$name] = $route; // Adds the route to the POST routes array
+    }
 
-        // Debugging: Affiche la route demandée et la méthode
-        echo 'Requested route: ' . $routeRequest[0] . ' with method: ' . $routeRequest[1] . PHP_EOL;
-
-        foreach ($this->routes as $route) {
-
-            // Debugging: Affiche chaque route vérifiée
-            echo 'Checking route: ' . $route->getPath() . PHP_EOL;
-
-            if ($route->matchesMethod($routeRequest[1])) {
-
-                if ($route->matchesPath($routeRequest[0])) {
-
-                    $handler = new Handler($route->getHandler());
-
-                    $handler->handle();
-
-                    return;
-                }
-
-                $routeArray = explode("/", $route->getPath());
-                $routeArray = array_filter($routeArray);
-
-                $requestRouteArray = explode("/", $routeRequest[0]);
-                $requestRouteArray = array_filter($requestRouteArray);
-
-                if (count($requestRouteArray) == count($routeArray)) {
-
-                    $parameters = [];
-                    $pathRequestIsValid = false;
-
-                    foreach ($requestRouteArray as $key => $pathSegment) {
-
-                        if ($pathSegment != $routeArray[$key]) {
-
-                            if (preg_match('/{(.*?)}/', $routeArray[$key], $matches)) {
-
-                                $parameters[$matches[1]] = $pathSegment;
-                                $pathRequestIsValid = true;
-
-                            } else {
-
-                                $pathRequestIsValid = false;
-                                break;
-
-                            }
-                        }
-                    }
-
-                    if ($pathRequestIsValid) {
-
-                        $handler = new Handler($route->getHandler());
-
-                        $handler->handle($parameters);
-
-                        return;
-                    }
-                }
+    /**
+     * Runs the router to match and execute the appropriate route
+     *
+     * @return void
+     */
+    public function run(): void
+    {
+        foreach ($this->routes[$_SERVER['REQUEST_METHOD']] as $route) { // Iterates through the routes for the current request method
+            if ($route->matches($_SERVER['REQUEST_URI'])) { // Checks if the route matches the current URI
+                $route->execute(); // Executes the matched route
             }
         }
-        throw new Exception('Route not found');
+    }
+
+    /**
+     * Generates a URL for the given route name and parameters
+     *
+     * @param string $name
+     * @param array  $params
+     * @param string $query
+     *
+     * @return string
+     */
+    public function generateUrl(string $name, array $params = [], string $query = ''): string
+    {
+        foreach ($this->routes as $routes) {
+            if (isset($routes[$name])) {
+                $path = '/' . $routes[$name]->getPath(); // Gets the path for the route
+
+                foreach ($params as $key => $param) {
+                    $path = str_replace(':' . $key, $param, $path); // Replaces path parameters with actual values
+                }
+
+                return $path . ($query ? '?' . $query : ''); // Returns the complete URL with query string if provided
+            }
+        }
+        throw new InvalidUrlException(); // Throws an exception if the route is not found
+    }
+
+    /**
+     * Redirects to the given route name with parameters
+     *
+     * @param string $name
+     * @param array  $params
+     *
+     * @return void
+     */
+    public function redirect(string $name, array $params = []): void
+    {
+        $location = $this->generateUrl($name, $params); // Generates the URL for redirection
+        header("Location: {$location}"); // Sends the HTTP header to redirect
     }
 }

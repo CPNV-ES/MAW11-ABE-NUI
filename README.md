@@ -1,68 +1,40 @@
-# MAW11-ABE-NUI
+# MAW11 - Exercice Looper
 
-## Description
+## Subject 
 
-This project is designed to .... and the main features are ...
+Create a copy of this web application : [Exercice Looper]
+(https://maw-looper.mycpnv.ch)
 
-## Getting Started
+## Deadline
 
-### Prerequisites
+intérmédiaire `31.10.2024`
+Final : `21.12.2024`
 
-List all dependencies and their version needed by the project as :
+## Requirement
 
--   DataBase Engine (MySql, PostgreSQL, MSSQL,...)
--   IDE used (PhpStorm, Visual Studio Code, IntelliJ,...)
--   Package manager (Nuget, Composer, npm, ...)
--   OS supported (W2k22, Debian12,...)
--   Virtualization (Docker, .Net, .JDK, .JRE)
+I must use HTML5, CSS, PHP and POO
 
-### Configuration
+## Installation
 
-How to set up the database?
-How do you set the sensitive data?
+### local installation (for development)
 
-## Deployment
+### Prerequisites:
 
-### On dev environment
+- Have a `php` and a database connection service installed and be able to reach them in a shell (test ´php -v´ to verify) Successful verification if the commande is recogized.
+- Have 
 
-How to get dependencies and build?
-How to run the tests?
+### Procedure:
 
-### On integration environment
+1. **Get the repository** from github (clone or `.zip`download) (exemple clonee in a shell in the ´C:/Users/<username>/documents/Github/´folder)
 
-How to deploy the application outside the dev environment.
 
-## Directory structure
 
--   Tip: try the tree bash command
 
-```shell
-├───Docs
-├───Shopping                                        //classes and packages
-│   ├───bin                                         //the binary to deploy on the end-user environment
-│   │   └───Debug
-│   └───obj
-│       └───Debug
-└───TestShopping                                    //test classes
-    ├───bin
-    │   └───Debug
-    └───obj
-        └───Debug
-```
 
-## Collaborate
 
--   Take time to read some readme and find the way you would like to help other developers collaborate with you.
 
--   They need to know:
-    -   How to propose a new feature (issue, pull request)
-    -   [How to commit](https://www.conventionalcommits.org/en/v1.0.0/)
-    -   [How to use your workflow](https://nvie.com/posts/a-successful-git-branching-model/)
+create database dans modelisation 
+composer installe dsns la racine du proijet
+ce qui me reste a faire ce qui foncrionne
+php -S localhost:4444 -t public
 
-## License
-
--   [Choose the license adapted to your project](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository).
-
-## Contact
-
--   How to get in contact with you? Discord, Trello, Issue?

@@ -2,46 +2,89 @@
 
 namespace App\Models;
 
-class ExerciseHelper extends Model
+use App\Database\DBConnection;
+use App\Database\Query;
+use PDOException;
+
+
+class ExerciseHelper
 {
-    protected static function tableName()
+    protected Query $query;
+
+    public function __construct()
     {
-        return 'exercises'; // Nom de la table correspondant dans la base de données
+        $this->query = new Query();
     }
 
-    public function get($id = null)
+    
+    public function get(int $exerciseId = null): array|Exercise
     {
-        if ($id) {
-            return self::findBy('id', $id);
+        if (is_null($exerciseId)) {
+            return $this->query->select('exercises', Exercise::class);
         } else {
-            return self::findAll();
+            return $this->query->select('exercises', Exercise::class, 'id = :id', ['id' => $exerciseId], true);
         }
     }
 
-    public function save($exercise)
+    public function save(Exercise $exercise): int
     {
-        if (isset($exercise->id)) {
-            $columnNames = ['title', 'state']; // Ajoute d'autres colonnes si nécessaire
-            $parameters = [
-                'title' => $exercise->title,
-                'state' => $exercise->state,
-                'id' => $exercise->id
-            ];
-            return self::update($columnNames, 'id', $parameters);
+        if (is_null($exercise->getId())) {
+            return $this->create($exercise);
         } else {
-            $columnNames = ['title', 'state']; // Ajoute d'autres colonnes si nécessaire
-            $parameters = [
-                'title' => $exercise->title,
-                'state' => $exercise->state
-            ];
-            return self::insert($columnNames, $parameters);
+            return $this->update($exercise);
         }
     }
 
-    public function delete($id)
+
+    private function create(Exercise $exercise): int
     {
-        $tableName = self::tableName();
-        $sql = "DELETE FROM $tableName WHERE id = :id";
-        return self::getDatabaseInstance()->query($sql, [':id' => $id]);
+        try {
+            return $this->query->insert(
+                'exercises',
+                Exercise::class,
+                ['title' => $exercise->getTitle(), 'state' => $exercise->getState()]
+            );
+        } catch (PDOException $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
+
+    private function update(Exercise $exercise): int
+    {
+        try {
+            return $this->query->update(
+                'exercises',
+                Exercise::class,
+                'id = :id',
+                ['id' => $exercise->getId()],
+                ['title' => $exercise->getTitle(), 'state' => $exercise->getState()]
+            );
+        } catch (PDOException $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
+    public function delete(int $exerciseId): bool
+    {
+        $exercise = $this->get($exerciseId);
+        $pdo = DBConnection::getInstance()->getPDO();
+        try {
+            $pdo->beginTransaction();
+            foreach ($exercise->getFields() as $field) {
+                $exercise->deleteField($field->getId());
+            }
+            $this->query->delete('exercises', Exercise::class, 'id = :id', ['id' => $exerciseId]);
+            $pdo->commit();
+            return true;
+        } finally {
+            // If the transaction has not been committed, roll it back
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+                return false;
+            }
+        }
     }
 }
