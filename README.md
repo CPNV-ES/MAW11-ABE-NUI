@@ -1,40 +1,80 @@
 # MAW11 - Exercice Looper
 
-## Subject 
+## Subject
 
-Create a copy of this web application : [Exercice Looper]
-(https://maw-looper.mycpnv.ch)
+Create a copy of this web application: [Exercice Looper](https://maw-looper.mycpnv.ch/)
 
-## Deadline
+## Deadlines
 
-intérmédiaire `31.10.2024`
-Final : `21.12.2024`
+- **Intermediate:** 31.10.2024
+- **Final:** 21.12.2024
 
-## Requirement
+## Requirements
 
-I must use HTML5, CSS, PHP and POO
+You must use:
+
+- HTML5
+- CSS
+- PHP
+- Object-Oriented Programming (OOP)
 
 ## Installation
 
-### local installation (for development)
+### Local Installation (for Development)
 
-### Prerequisites:
+#### Prerequisites:
 
-- Have a `php` and a database connection service installed and be able to reach them in a shell (test ´php -v´ to verify) Successful verification if the commande is recogized.
-- Have 
+1. Have PHP and a database connection service installed.
+2. Verify the installation in a shell:
+    ```bash
+    php -v
+    ```
+   Successful verification occurs if the command is recognized.
 
-### Procedure:
+#### Procedure:
 
-1. **Get the repository** from github (clone or `.zip`download) (exemple clonee in a shell in the ´C:/Users/<username>/documents/Github/´folder)
+1. Clone the repository from GitHub or download it as a ZIP file:
+    ```bash
+    git clone <repository_url>
+    ```
+   Example: Clone it into the folder `C:/Users/<username>/Documents/Github/`.
 
+2. Set up the database:
+    - Run the provided script `create_db.sql` located in the `modelisation` folder to create the necessary database.
+    - Database connection details are:
+      ```php
+      DBConnection::setUp(
+          'mysql:host=127.0.0.1;port=3308;dbname=looper;charset=utf8mb4',
+          'root',
+          'root_password'
+      );
+      ```
 
+3. Install dependencies:
+    ```bash
+    composer install
+    ```
+   Run this command in the root of the project directory.
 
+4. Start the development server:
+    ```bash
+    php -S localhost:4444 -t public
+    ```
 
+## Progress
 
+### Completed Features:
 
+- Exercise creation works.
+- Field creation works.
+- Fields can be viewed within an exercise.
 
-create database dans modelisation 
-composer installe dsns la racine du proijet
-ce qui me reste a faire ce qui foncrionne
-php -S localhost:4444 -t public
+### Known Issues:
 
+- Exercises cannot be viewed.
+- Fields cannot be viewed individually.
+- Exercises cannot be filled.
+- Responses cannot be viewed.
+- CSS is broken.
+- No best practices like dotenv or similar are followed.
+- Code documentation is minimal.
