@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:10.11  # Utilise l'image officielle MariaDB
+    container_name: looper-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Mot de passe root
+      MYSQL_DATABASE: my_database         # Base de données initiale
+      MYSQL_USER: my_user                 # Utilisateur
+      MYSQL_PASSWORD: my_password         # Mot de passe utilisateur
+    volumes:
+      - db_data:/var/lib/mysql  # Persist les données
+    ports:
+      - "3308:3306"             # Mappe le port 3306
+    restart: always
+
+volumes:
+  db_data:
